@@ -238,11 +238,75 @@
   text-decoration: none;
 }
 
+/* Mobile (strip-row) fallback. Hidden on desktop; the flower is the
+ * primary view there. Swapped in below 760px, where the radial layout
+ * has no room. See StripFallback in HexCommitGrid.jsx. */
+.hcg-mobile {
+  display: none;
+}
+
+.hcg-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.hcg-strip-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--hcg-accent-soft);
+}
+.hcg-strip-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.hcg-strip-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--hcg-text);
+  text-decoration: none;
+  font-family: var(--hcg-font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.hcg-strip-time {
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: var(--hcg-text-muted);
+  font-family: var(--hcg-font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.hcg-strip-cells {
+  flex: 1 0 100%;
+  margin-top: 4px;
+  display: grid;
+  grid-template-columns: repeat(var(--hcg-strip-cols, 24), minmax(0, 1fr));
+  gap: 3px;
+}
+.hcg-strip-cell {
+  aspect-ratio: 1 / 1;
+  border-radius: 2px;
+  display: block;
+  box-sizing: border-box;
+}
+.hcg-strip-cell-last {
+  box-shadow: 0 0 8px var(--hcg-bg-glow);
+}
+
 @media (max-width: 760px) {
   .hcg-flower {
-    /* Below 760px the radial layout doesn't have room. Hide the flower
-     * and let consumers render a fallback. The component itself doesn't
-     * ship a mobile fallback — that's the consumer's call. */
+    /* Below 760px the radial layout doesn't have room — hand off to the
+     * strip-row fallback (or the consumer's `mobileFallback`). */
     display: none;
+  }
+  .hcg-mobile {
+    display: block;
   }
 }

@@ -20,6 +20,11 @@
 //   showPaletteSelector : true
 //   showFooter       : true
 //   className        : ''       — extra class on the wrapper
+//   mobileFallback   : undefined — what to render below 760px, where the
+//                      radial honeycomb has no room. `undefined` (default)
+//                      renders a built-in strip-row fallback; pass `null`
+//                      to render nothing (and wrap your own); pass any
+//                      React node to render it instead.
 
 import { useEffect, useState } from 'react';
 import HexCell from './HexCell.jsx';
@@ -83,7 +88,8 @@ export default function HexCommitGrid({
   title = 'Recent shipping',
   showPaletteSelector = true,
   showFooter = true,
-  className = ''
+  className = '',
+  mobileFallback = undefined
 }) {
   if (!username) {
     throw new Error('<HexCommitGrid /> requires a `username` prop');
@@ -160,7 +166,16 @@ export default function HexCommitGrid({
       )}
 
       {status === 'ready' && repos.length > 0 && (
-        <HexFlower repos={repos} palette={palette} days={days} />
+        <>
+          <HexFlower repos={repos} palette={palette} days={days} />
+          <div className="hcg-mobile">
+            {mobileFallback === undefined ? (
+              <StripFallback repos={repos} palette={palette} days={days} />
+            ) : (
+              mobileFallback
+            )}
+          </div>
+        </>
       )}
 
       {showFooter && (
@@ -314,6 +329,62 @@ function HexFlower({ repos, palette, days }) {
                 palette={palette}
                 ariaLabel={`${repo.name}: ${days}-day activity hex, ${total} commits`}
               />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// StripFallback — the mobile (≤760px) view. The radial honeycomb is
+// 460×320 with ~110px label gutters and can't shrink below ~600px
+// without the labels and 24-triangle subdivisions becoming illegible.
+// Instead each repo gets a horizontal row: [name · relative time · a
+// full-width grid of `days` day-cells]. Cells use the active palette's
+// bucket colors so the row stays visually consistent with the flower.
+// Hidden on desktop / shown on mobile via CSS (.hcg-mobile).
+function StripFallback({ repos, palette, days }) {
+  return (
+    <div className="hcg-strip">
+      {repos.slice(0, 6).map((repo) => {
+        const repoDays = buildDays(new Date(repo.pushedAt), days);
+        const lastIdx = repoDays.length - 1;
+        const total = Object.values(repo.counts).reduce((a, b) => a + b, 0);
+        return (
+          <div className="hcg-strip-row" key={repo.fullName}>
+            <a
+              className="hcg-strip-name"
+              href={repo.htmlUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              title={`${repo.name} — ${total} commit${total === 1 ? '' : 's'} in ${days}-day window`}
+            >
+              {repo.name}
+            </a>
+            <span className="hcg-strip-time">{relativeTime(repo.pushedAt)}</span>
+            <div
+              className="hcg-strip-cells"
+              style={{ '--hcg-strip-cols': days }}
+            >
+              {repoDays.map((day, i) => {
+                const count = repo.counts[day] || 0;
+                const fill = palette.buckets[bucketOf(count)];
+                const isLast = i === lastIdx;
+                const label = `${day}: ${count} commit${count === 1 ? '' : 's'}`;
+                return (
+                  <span
+                    key={day}
+                    className={`hcg-strip-cell${isLast && count > 0 ? ' hcg-strip-cell-last' : ''}`}
+                    title={label}
+                    aria-label={label}
+                    style={{
+                      background: fill.bg,
+                      border: `1px solid ${fill.border}`
+                    }}
+                  />
+                );
+              })}
             </div>
           </div>
         );

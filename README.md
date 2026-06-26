@@ -42,6 +42,7 @@ That's it. The component fetches the user's most-recently-pushed public, non-for
 | `showPaletteSelector` | `true` | Render the palette selector buttons |
 | `showFooter` | `true` | Render the bottom row (caption + legend + profile link) |
 | `className` | `''` | Extra class on the wrapper element |
+| `mobileFallback` | _built-in_ | What to render below 760px, where the radial flower has no room. Defaults to a built-in strip-row view (one row per repo: name · relative time · day-cells). Pass `null` to render nothing and supply your own, or pass any React node to render it instead |
 
 ## Palettes
 
@@ -126,7 +127,7 @@ Example:
 
 ## Limitations
 
-- **No mobile fallback.** The radial layout hides below 760px viewport (the layout doesn't shrink gracefully). Render your own fallback for narrow screens.
+- **Radial layout is desktop-only.** The honeycomb hides below 760px viewport (it doesn't shrink gracefully). Below that, a built-in strip-row fallback renders instead — override or disable it with the `mobileFallback` prop.
 - **Anonymous GitHub API rate limit** is 60 requests/hour per IP. Each cold load costs `1 + repoCount` requests. The 1-hour sessionStorage cache covers same-visitor revisits. If you're on a NAT'd corporate IP with heavy traffic, you may need a backend proxy.
 - **Only public repos.** The anonymous API can't see private repos.
 - **No-fork, no-archived filter.** Repos with `fork: true` or `archived: true` are excluded.
