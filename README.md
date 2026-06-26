@@ -6,6 +6,14 @@ Each repo is a flat-top hexagon split into 24 triangular cells. The inner 6 tria
 
 Six hexes arrange at 60° intervals around an empty center, touching at flat edges (true honeycomb tiling). Repo names + relative-time labels radiate outward.
 
+## Preview
+
+![Desktop — the radial honeycomb flower](docs/screenshot-desktop.png)
+
+Below 760px the radial layout hands off to a built-in strip-row fallback — one row per repo with a full-width grid of day-cells:
+
+![Mobile — the strip-row fallback](docs/screenshot-mobile.png)
+
 ## Install
 
 ```bash
