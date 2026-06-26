@@ -1,0 +1,248 @@
+/* hex-commit-grid styles
+ *
+ * Theming: override these CSS variables on a parent element to customize
+ * the look. Defaults are tuned for a dark-themed site with cyan/teal
+ * accents.
+ *
+ *   --hcg-bg              : panel background behind the unrolled strip
+ *   --hcg-bg-border       : panel border color
+ *   --hcg-bg-glow         : panel box-shadow color (the soft halo)
+ *   --hcg-text            : primary text color (repo names, header)
+ *   --hcg-text-muted      : secondary text (relative time, footer)
+ *   --hcg-accent          : link / active-state color
+ *   --hcg-accent-soft     : faint border for inactive palette buttons
+ *   --hcg-line-color      : dashed connector line color (hex → label)
+ *   --hcg-glow            : hex card's outer drop-shadow color
+ *   --hcg-font-mono       : monospace font stack (labels, footer)
+ *   --hcg-font-heading    : heading font stack (the "Recent shipping" title)
+ */
+
+.hex-commit-grid {
+  --hcg-bg: rgba(13, 6, 38, 0.94);
+  --hcg-bg-border: rgba(94, 234, 212, 0.35);
+  --hcg-bg-glow: rgba(94, 234, 212, 0.28);
+  --hcg-text: #ecfeff;
+  --hcg-text-muted: #7a85a0;
+  --hcg-accent: #5eead4;
+  --hcg-accent-soft: rgba(94, 234, 212, 0.10);
+  --hcg-line-color: rgba(94, 234, 212, 0.30);
+  --hcg-glow: rgba(94, 234, 212, 0.18);
+  --hcg-font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  --hcg-font-heading: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+
+  color: var(--hcg-text);
+}
+
+.hcg-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.hcg-header h3 {
+  margin: 0;
+  font-family: var(--hcg-font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--hcg-text);
+}
+.hcg-meta {
+  font-family: var(--hcg-font-mono);
+  font-size: 0.75rem;
+  color: var(--hcg-text-muted);
+  letter-spacing: 0.04em;
+}
+
+.hcg-palette-selector {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.hcg-palette-btn {
+  background: transparent;
+  border: 1px solid var(--hcg-accent-soft);
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--hcg-text-muted);
+  font-family: var(--hcg-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: all 150ms;
+}
+.hcg-palette-btn.active {
+  background: var(--hcg-accent-soft);
+  border-color: var(--hcg-bg-border);
+  color: var(--hcg-text);
+}
+.hcg-palette-swatch-row {
+  display: inline-flex;
+  gap: 2px;
+}
+.hcg-palette-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.hcg-flower {
+  position: relative;
+  width: 460px;
+  height: 320px;
+  margin: 0 auto;
+  max-width: 100%;
+}
+.hcg-flower-svg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hcg-label {
+  position: absolute;
+  max-width: 110px;
+  pointer-events: none;
+  user-select: none;
+  font-family: var(--hcg-font-mono);
+}
+.hcg-label-left   { transform: translate(0%, -50%);   text-align: left; }
+.hcg-label-right  { transform: translate(-100%, -50%); text-align: right; }
+.hcg-label-center { transform: translate(-50%, -50%); text-align: center; }
+.hcg-label-name {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--hcg-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hcg-label-time {
+  font-size: 10px;
+  color: var(--hcg-text-muted);
+  margin-top: 2px;
+  letter-spacing: 0.04em;
+}
+
+.hcg-card {
+  position: absolute;
+  width: 78px;
+  height: 78px;
+  z-index: 5;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 8px;
+  left: calc(var(--hcg-cx) - 39px);
+  top: calc(var(--hcg-cy) - 39px);
+  transition: width 380ms cubic-bezier(0.4, 0, 0.2, 1),
+              left 380ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hcg-card:hover {
+  width: 280px;
+  left: calc(var(--hcg-cx) - 140px);
+  z-index: 20;
+}
+
+.hcg-card-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--hcg-bg);
+  border: 1px solid var(--hcg-bg-border);
+  border-radius: 8px;
+  box-shadow: 0 0 24px var(--hcg-bg-glow);
+  opacity: 0;
+  transition: opacity 280ms 60ms;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+.hcg-card:hover .hcg-card-bg {
+  opacity: 1;
+}
+
+.hcg-card-svg-wrap {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  height: 78px;
+  filter: drop-shadow(0 0 8px var(--hcg-glow));
+  transition: filter 180ms;
+}
+.hcg-card:hover .hcg-card-svg-wrap {
+  filter: none;
+}
+
+/* Per-triangle unroll on hover. --tx / --ty / --tr are set inline per
+ * path by HexCell, computed from the source-centroid → strip-target
+ * delta. */
+.hcg-card svg path {
+  transform: translate(0px, 0px) rotate(0deg);
+}
+.hcg-card:hover svg path {
+  transform: translate(var(--tx), var(--ty)) rotate(var(--tr));
+}
+
+/* Color pulse for active (bucket > 0) cells. --c-from / --c-to /
+ * --c-from-border / --c-to-border / --phase are set inline per path by
+ * HexCell from the active palette. Bucket-0 paths have data-pulse="0"
+ * and stay at their static fill. */
+@keyframes hcg-cell-pulse {
+  0%, 100% {
+    fill: var(--c-from);
+    stroke: var(--c-from-border);
+  }
+  50% {
+    fill: var(--c-to);
+    stroke: var(--c-to-border);
+  }
+}
+.hcg-card svg path[data-pulse="1"] {
+  animation: hcg-cell-pulse 8s ease-in-out infinite;
+  animation-delay: var(--phase, 0s);
+}
+
+.hcg-footer {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-family: var(--hcg-font-mono);
+  font-size: 0.75rem;
+  color: var(--hcg-text-muted);
+  letter-spacing: 0.04em;
+}
+.hcg-legend {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+.hcg-legend-cell {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+}
+.hcg-link {
+  color: var(--hcg-accent);
+  text-decoration: none;
+}
+
+@media (max-width: 760px) {
+  .hcg-flower {
+    /* Below 760px the radial layout doesn't have room. Hide the flower
+     * and let consumers render a fallback. The component itself doesn't
+     * ship a mobile fallback — that's the consumer's call. */
+    display: none;
+  }
+}

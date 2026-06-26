@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>hex-commit-grid · demo</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #07021a;
+        color: #ecfeff;
+        font-family: system-ui, -apple-system, sans-serif;
+        min-height: 100vh;
+      }
+      .demo-shell {
+        max-width: 640px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(13, 6, 38, 0.6);
+        border: 1px solid rgba(94, 234, 212, 0.15);
+        border-radius: 16px;
+      }
+      .demo-shell > h1 {
+        margin: 0 0 8px 0;
+        font-size: 1.5rem;
+      }
+      .demo-shell > p {
+        margin: 0 0 24px 0;
+        color: #7a85a0;
+        font-size: 0.875rem;
+      }
+      .demo-shell > p code {
+        background: rgba(94, 234, 212, 0.08);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./main.jsx"></script>
+  </body>
+</html>
