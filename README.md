@@ -8,6 +8,10 @@ Six hexes arrange at 60° intervals around an empty center, touching at flat edg
 
 ## Preview
 
+▶️ **[Watch the demo on YouTube](https://youtu.be/AKbe-c-JJ2I)** — install, config, and the live component in under a minute.
+
+[![hex-commit-grid demo video](docs/youtube-thumbnail.png)](https://youtu.be/AKbe-c-JJ2I)
+
 ![Desktop — the radial honeycomb flower](docs/screenshot-desktop.png)
 
 Below 760px the radial layout hands off to a built-in strip-row fallback — one row per repo with a full-width grid of day-cells:
