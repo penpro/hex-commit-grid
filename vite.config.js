@@ -9,5 +9,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   root: 'demo',
-  server: { port: 5173 }
+  // Honor a PORT env var (used by the preview harness / autoPort) and
+  // fall back to 5173 for plain `npm run dev`.
+  server: { port: Number(process.env.PORT) || 5173 }
 });
